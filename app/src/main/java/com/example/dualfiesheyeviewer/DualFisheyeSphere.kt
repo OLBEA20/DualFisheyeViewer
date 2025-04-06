@@ -1,4 +1,4 @@
-package com.example.dualfiesheyeviewer.shapes
+package com.example.dualfiesheyeviewer
 
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
@@ -8,7 +8,7 @@ import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 import kotlin.math.*
 
-class Sphere(
+class DualFisheyeSphere (
     private val textureId: Int,
     private val stacks: Int = 30,
     private val slices: Int = 30,
@@ -79,7 +79,6 @@ class Sphere(
                 position(0)
             }
 
-        // === SHADERS ===
         val vertexShaderCode = """
             attribute vec4 aPosition;
             attribute vec2 aTexCoord;
