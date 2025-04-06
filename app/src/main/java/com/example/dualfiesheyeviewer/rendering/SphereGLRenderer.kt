@@ -7,7 +7,6 @@ import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
-import android.util.Log
 import android.view.Surface
 import com.example.dualfiesheyeviewer.R
 import com.example.dualfiesheyeviewer.shapes.Sphere
@@ -50,9 +49,10 @@ class SphereGLRenderer(private val context: Context): GLSurfaceView.Renderer {
 
     override fun onDrawFrame(unused: GL10) {
 
-        //// Update video frame
-        surfaceTexture.updateTexImage()
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+
+
+        surfaceTexture.updateTexImage()// Update video frame
 
         val viewMatrix = FloatArray(16)
         val mvpMatrix = FloatArray(16)
@@ -60,11 +60,6 @@ class SphereGLRenderer(private val context: Context): GLSurfaceView.Renderer {
         val rotationMatrixY = FloatArray(16)
         val tempMatrix = FloatArray(16)
 
-        //Matrix.setLookAtM(viewMatrix,
-         //   0,
-          //  0f, 0f, 0f,
-           // 0f, 0f, -1f,
-            //0f, 1f, 0f)
         Matrix.setLookAtM(viewMatrix, 0,
             0f, 0f, zoom,
             0f, 0f, 0f,
@@ -72,19 +67,18 @@ class SphereGLRenderer(private val context: Context): GLSurfaceView.Renderer {
 
         val scaleMatrix = FloatArray(16)
         Matrix.setIdentityM(scaleMatrix, 0)  // Initialize to identity matrix
-        Matrix.scaleM(scaleMatrix, 0, 3f, 3f, 3f)  // Scale by 2 in all axes
+        Matrix.scaleM(scaleMatrix, 0, 6f, 6f, 6f)  // Scale by 2 in all axes
 
-
-        //// Yaw = rotate around Y axis
+        // Yaw = rotate around Y axis
         Matrix.setRotateM(rotationMatrixY, 0, yaw, 0f, 1f, 0f)
 
-        //// Pitch = rotate around X axis
+        // Pitch = rotate around X axis
         Matrix.setRotateM(rotationMatrixX, 0, pitch, 1f, 0f, 0f)
 
-        //// Combine rotation matrices
+        // Combine rotation matrices
         Matrix.multiplyMM(tempMatrix, 0, rotationMatrixY, 0, rotationMatrixX, 0)
 
-        //// Apply to view matrix
+        // Apply to view matrix
         Matrix.multiplyMM(viewMatrix, 0, viewMatrix, 0, tempMatrix, 0)
 
         // Apply scaling to the MVP matrix
@@ -95,23 +89,11 @@ class SphereGLRenderer(private val context: Context): GLSurfaceView.Renderer {
 
         Matrix.frustumM(projMatrix, 0, -ratio, ratio, -1f, 1f, 0.5f, 100f - zoom)
 
-        //// Set up projection matrix (update width/height in onSurfaceChanged)
+        // Set up projection matrix (update width/height in onSurfaceChanged)
         Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, viewMatrix, 0)
 
-        //// Draw the sphere
+        // Draw the sphere
         sphere.draw(mvpMatrix)
-
-        //surfaceTexture.updateTexImage()
-        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-
-        //Matrix.setLookAtM(viewMatrix, 0,
-        //    0f, 0f, 3f,
-        //    0f, 0f, 0f,
-        //    0f, 1f, 0f)
-
-        //Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, viewMatrix, 0)
-
-        //sphere.draw(mvpMatrix)
     }
 
     private var width = 0
@@ -136,12 +118,10 @@ class SphereGLRenderer(private val context: Context): GLSurfaceView.Renderer {
     }
 
     private var zoom = 1f // Default distance from center (inside the sphere)
-    private val minZoom = 0f
-    private val maxZoom = 1f
+    private val minZoom = 0.1f
+    private val maxZoom = 5f
 
     fun zoomBy(delta: Float) {
         zoom = (zoom + delta).coerceIn(minZoom, maxZoom)
-        Log.w("ZOOM", zoom.toString())
     }
-
 }

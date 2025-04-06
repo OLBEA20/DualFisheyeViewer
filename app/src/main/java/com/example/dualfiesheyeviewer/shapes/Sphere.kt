@@ -92,17 +92,6 @@ class Sphere(
             }
         """.trimIndent()
 
-        //#extension GL_OES_EGL_image_external : require
-        //        precision mediump float;
-        //uniform samplerExternalOES uTexture;
-        //varying vec2 vTexCoord;
-
-        //void main() {
-        //    gl_FragColor = texture2D(uTexture, vTexCoord);
-        //}
-
-        //uniform sampler2D videoTexture;
-
         val fragmentShaderCode = """
         #extension GL_OES_EGL_image_external : require
         precision mediump float;
